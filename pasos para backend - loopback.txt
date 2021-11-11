@@ -1,0 +1,115 @@
+Orden pra crear proyecto en loopback
+<---- Crear Proyecto -------->
+
+lb4 app
+nombre de proyecto: Backend_HS
+Descripcion: Backend Inmobiliaria
+Directorio raiz:Backend_HS
+Nombre de clase de aplicacion: app
+paquete adicionales: todos
+
+<----- Crear Datasource --------->
+
+lb4 datasource
+nombre de Datasourse:
+Seleccionar el motor de base de datos: (MongoDB, MySql,Sqlserver)
+Informacion de conexion: dejamos en blanco para configurar mas tarde
+Soportado MongoDB >3.1.0: Si
+ 
+<----- Crear Models --------->
+
+lb4 model
+Nombre de clase model: (Cada uno de los que necesito), empezamos por la independiente
+Seleccione la clase base de modelo(Entity/Model): Entity
+Desea permitir propiedades adionales: No
+//Configuracion campo id
+Especifique las propiedades del modelo: (Nombre de los campos de la tabla o modelo)
+Tipo de dato: (String, number, Boolean)
+es id la propiedad de ID(y/n): si es el id ingresamos si, de lo contrario no
+id se genera automaticamente(y/n): si (cuando es generada automaticamente por la base de datos)
+// configuracion cualquier otro campo
+Especifique las propiedades del modelo: (Nombre de los campos de la tabla o modelo)
+Tipo de dato: (String, number, Boolean)
+es necesario o requerido: Yes
+
+una vez finalizado todas las propiedades damos enter para finalizar
+
+<----- Crear Repository --------->
+lb4 repository
+Selecciones el origen de datos: (Nos muestra nuestros datasourse que hemos configurado previamente, selecionamos el requerido)
+Seleccione lo modelos para generar el repositorio: (nos muestra nuestros modelos, seleccionamos el requerido)
+Seleccione la clase base del repositorio: Tomamos el predeterminado de Loopback
+
+<---- Relaciones entre tablas ------->
+
+// 1 relacion
+
+lb4 relation
+Seleccione el tipo de relacion: (belongTo: cuando un dato pertenece a otra entidad, hasMany: Cuando una entidad tiene muchos de otros, hasManyThrough: Realizar la relacion de muchos a mucho donde genera una entidad intermedia, hasOne: relacion de uno a uno)
+Ejemplo seleccionamos belongTo
+Seleccione el modelo origen: Pedido (un pedido pertenece a una persona)
+Seleccione el modelo destion: Persona (un pedido pertenece a una persona)
+Nombre de clave foranea para definir el modelo de origen: personaId (Puedo cambiar el nombre)
+Nombre de relacion: persona
+Desea permitir que las consultas de pedido incluyan datos de las instancias de Persona relacionadas(Y/N): Si
+
+// 2 relacion
+
+lb4 relation
+Seleccione el tipo de relacion: hasMany
+Seleccione el modelo origen: Persona
+Seleccione el modelo destion: Pedido
+Nombre de clave foranea para definir el modelo de origen: personaId
+Nombre de relacion: pedidos
+Desea permitir que las consultas de pedido incluyan datos de las instancias de Persona relacionadas(Y/N): Yes
+
+// 3 relacion
+lb4 relation
+Seleccione el tipo de relacion: hasOne
+Seleccione el modelo origen: Pedido
+Seleccione el modelo destion: Producto
+Nombre de clave foranea para definir e l modelo de origen: pedidoId
+Nombre de relacion: producto
+Desea permitir que las consultas de pedido incluyan datos de las instancias de Persona relacionadas(Y/N): Si
+
+
+<---- Crear Servicios ------->
+lb4 service
+Tipo de Service: Clase de servicio local vinculada a contexto de aplicacion (Existe 3 opciones para esta elijo la segunda)
+Nombre de Servicio: notificacion
+
+lb4 service
+Tipo de Service: Clase de servicio local vinculada a contexto de aplicacion (Existe 3 opciones para esta elijo la segunda)
+Nombre de Servicio: Autenticacion
+
+<---- Crear Controller --------->
+lb4 controller
+Nombre de clase controller: persona (uno para uno de nuestros modelos)
+Que especie de controlador desea generar: Controlador REST con funciones CRUD (Vacio o con funcionalidades CRUD)
+cual es el nombre del modelo que se va a utilizar con este repositorio CRUD?: Persona (uno para uno de nuestros modelos)
+cual es el nombre de la propiedad de ID: id (Definido en el modelo)
+cual es el tipo de ID: String
+Se omite el ID cuando se crea una instancia nueva (y/n): si (Es generada automaticamente por la BD)
+Cual es el nombre de la via de acceso HTTP base de las operaciones CRUD=: /personas (Podemos actualzar el nombre)
+
+
+
+
+<--- Libreria a instalar --->
+npm i @loopback/authentication
+npm i @loopback/security
+npm i parse-bearer-token
+
+<--- Crear Strategies --->
+crear una carpeta con nombre:strategies
+crear un archivo .ts: admin.strategy.ts
+importamos las estrategias al archivo application.ts 
+-> registerAuthenticationStrategy(this, EstrategiaAdministrador);
+-> this.component(AuthenticationComponent);
+por ultimo agregamos la restriccion cada ruta agregando al principio de cada metodo @authenticate('admin'), agregando la estrategia que deseamos aplicar.
+tambien se puede aplicar a toda la clase colocando @authenticate('admin') en la parte superior de la clase 
+para ignorar a una sola ruta @authenticate.skip() al principio del metodo.
+
+
+
+
