@@ -1,4 +1,7 @@
-import {Entity, model, property} from '@loopback/repository';
+import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {TypeProduct} from './type-product.model';
+import {TypeProperty} from './type-property.model';
+import {Employee} from './employee.model';
 
 @model()
 export class Product extends Entity {
@@ -31,18 +34,6 @@ export class Product extends Entity {
     type: 'string',
     required: true,
   })
-  type_product: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  type_property: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
   link_photo: string;
 
   @property({
@@ -57,6 +48,14 @@ export class Product extends Entity {
   })
   address: string;
 
+  @belongsTo(() => TypeProduct)
+  typeProductId: string;
+
+  @belongsTo(() => TypeProperty)
+  typePropertyId: string;
+
+  @belongsTo(() => Employee)
+  employeeId: string;
 
   constructor(data?: Partial<Product>) {
     super(data);
