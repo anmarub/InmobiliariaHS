@@ -1,5 +1,6 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
+import {Entity, model, property, hasMany, belongsTo} from '@loopback/repository';
 import {Order} from './order.model';
+import {TypeIdentification} from './type-identification.model';
 
 @model()
 export class Customers extends Entity {
@@ -60,6 +61,9 @@ export class Customers extends Entity {
 
   @hasMany(() => Order)
   orders: Order[];
+
+  @belongsTo(() => TypeIdentification)
+  typeIdentificationId: string;
 
   constructor(data?: Partial<Customers>) {
     super(data);

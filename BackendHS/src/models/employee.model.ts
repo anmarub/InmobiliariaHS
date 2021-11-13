@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {TypeIdentification} from './type-identification.model';
 
 @model()
 export class Employee extends Entity {
@@ -8,12 +9,6 @@ export class Employee extends Entity {
     generated: true,
   })
   id?: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  type_identification: string;
 
   @property({
     type: 'string',
@@ -63,6 +58,8 @@ export class Employee extends Entity {
   })
   email: string;
 
+  @belongsTo(() => TypeIdentification)
+  typeIdentificationId: string;
 
   constructor(data?: Partial<Employee>) {
     super(data);
