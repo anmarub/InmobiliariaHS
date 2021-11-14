@@ -1,29 +1,28 @@
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
+  del, get,
+  getModelSchemaRef, param, patch, post, put, requestBody,
+  response
 } from '@loopback/rest';
+import {Keys} from '../config/keys';
 import {Employee} from '../models';
 import {EmployeeRepository} from '../repositories';
+import {AuthenticationService} from '../services/authentication.service';
 
 export class EmployeeController {
   constructor(
     @repository(EmployeeRepository)
     public employeeRepository : EmployeeRepository,
+    @service(AuthenticationService)
+    public serviceAuth : AuthenticationService
   ) {}
 
   @post('/employees')
@@ -44,7 +43,26 @@ export class EmployeeController {
     })
     employee: Omit<Employee, 'id'>,
   ): Promise<Employee> {
-    return this.employeeRepository.create(employee);
+        // instanciar metodo para generar clave y asignar al cliente
+        const generatePassword = this.serviceAuth.generateAPassword();
+        const encriptPassword = this.serviceAuth.encriptPassword(generatePassword);
+        employee.password = encriptPassword;
+        const createdEmployee = this.employeeRepository.create(employee);
+        // Enviar notificaciones
+        const mailRecipient = employee.email;
+        const emailSubject = 'Bienvenido a nuestra plataforma';
+        const emailBody = `Hola!! ${employee.names}, su nombre de usuario es ${employee.email}
+                            y su contraseña provisional es: ${encriptPassword}
+                            no olvide cambiarla en el momento de ingresa a la plataforma`;
+        // Enviar correo electronico usando node-fetch
+        const urlSend = `${Keys.URLAPINOTIFICATION}/mensaje-correo?correo_destino=${mailRecipient}&asunto=${emailSubject}&contenido_correo=${emailBody}`;
+        const fechtRepose = fetch(urlSend, {
+          method: 'GET',
+          headers: {'Content-Type': 'text/plain'},
+        });
+        console.log(fechtRepose);
+        console.log(urlSend);
+        return createdEmployee;
   }
 
   @get('/employees/count')

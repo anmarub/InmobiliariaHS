@@ -15,12 +15,6 @@ export class Customers extends Entity {
     type: 'string',
     required: true,
   })
-  type_identification: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
   number_identification: string;
 
   @property({

@@ -1,29 +1,29 @@
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
+  del, get,
+  getModelSchemaRef, param, patch, post, put, requestBody,
+  response
 } from '@loopback/rest';
+import fetch from 'node-fetch';
+import {Keys} from '../config/keys';
 import {Customers} from '../models';
 import {CustomersRepository} from '../repositories';
+import {AuthenticationService} from '../services/authentication.service';
 
 export class CustomerController {
   constructor(
     @repository(CustomersRepository)
     public customersRepository : CustomersRepository,
+    @service(AuthenticationService)
+    public serviceAuth : AuthenticationService
   ) {}
 
   @post('/customers')
@@ -44,7 +44,27 @@ export class CustomerController {
     })
     customers: Omit<Customers, 'id'>,
   ): Promise<Customers> {
-    return this.customersRepository.create(customers);
+    // instanciar metodo para generar clave y asignar al cliente
+    const generatePassword = this.serviceAuth.generateAPassword();
+    const encriptPassword = this.serviceAuth.encriptPassword(generatePassword);
+    customers.password = encriptPassword;
+    const createdCustomer = this.customersRepository.create(customers);
+    // Enviar notificaciones
+    const mailRecipient = customers.email;
+    const emailSubject = 'Bienvenido a nuestra plataforma';
+    const emailBody = `Hola!! ${customers.names}, su nombre de usuario es ${customers.email}
+                        y su contraseña provisional es: ${encriptPassword}
+                        no olvide cambiarla en el momento de ingresa a la plataforma`;
+    // Enviar correo electronico usando node-fetch
+    const urlSend = `${Keys.URLAPINOTIFICATION}/mensaje-correo?correo_destino=${mailRecipient}&asunto=${emailSubject}&contenido_correo=${emailBody}`;
+    const fechtRepose = fetch(urlSend, {
+      method: 'GET',
+      headers: {'Content-Type': 'text/plain'},
+    });
+    console.log(fechtRepose);
+    console.log(urlSend);
+    return createdCustomer;
+
   }
 
   @get('/customers/count')
