@@ -7,7 +7,7 @@ import {UserCredentialsRepository} from './user-credentials.repository';
 export type Credentials = {
   email: string;
   password: string;
-  role?: string
+  role?: string[];
 };
 
 export class UserRepository extends DefaultCrudRepository<

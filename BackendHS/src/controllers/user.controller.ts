@@ -24,6 +24,7 @@ export class NewUserRequest extends User {
 
 export class UserController {
   constructor(
+    //llamo los repositorios y servicios de autenticacion
     @repository(UserRepository) public userRepository: UserRepository,
     @inject(PasswordHasherBindings.PASSWORD_HASHER)
     public passwordHasher: PasswordHasher,
@@ -33,7 +34,7 @@ export class UserController {
     public userService: UserService<User, Credentials>,
   ) {
   }
-
+//Endpoint para registrar el usuario empleado
   @post('/users/sign-up', {
     responses: {
       '200': {
@@ -50,33 +51,33 @@ export class UserController {
   })
   async create(
     @requestBody(CredentialsRequestBody)
-      newUserRequest: Credentials,
-  ): Promise<User> {
-    newUserRequest.role = 'user';
+      newUserRequest: Credentials, //usando Type en el Repository
+  ): Promise<User> { //usando el modelo de User
+    newUserRequest.role = ['user']; //asigno el rol de usuario
 
-    // ensure a valid email value and password value
+    // garantizar un valor de correo electrónico y una contraseña válidos
     validateCredentials(_.pick(newUserRequest, ['email', 'password']));
 
-    // encrypt the password
+    // encriptar la contraseña
     const password = await this.passwordHasher.hashPassword(
       newUserRequest.password,
     );
 
     try {
-      // create the new user
+      // crear el nuevo usuario
       const savedUser = await this.userRepository.create(
         _.omit(newUserRequest, 'password'),
       );
 
-      // set the password
+      // asigno el id y la contraseña cifrada al usuario
       await this.userRepository
         .userCredentials(savedUser.id)
         .create({password});
 
       return savedUser;
     } catch (error) {
-      // MongoError 11000 duplicate key
-      if (error.code === 11000 && error.errmsg.includes('index: uniqueEmail')) {
+      // Validar si el correo electrónico ya existe
+      if (error.code === 11000 && error.errmsg.includes('E11000 duplicate key error collection')) {
         throw new HttpErrors.Conflict('Email value is already taken');
       } else {
         throw error;
@@ -100,33 +101,33 @@ export class UserController {
   })
   async createAdmin(
     @requestBody(CredentialsRequestBody)
-      newUserRequest: Credentials,
-  ): Promise<User> {
-    // All new users have the "customer" role by default
-    newUserRequest.role = 'admin';
-    // ensure a valid email value and password value
+      newUserRequest: Credentials, //usando Type en el Repository
+  ): Promise<User> { //usando el modelo de User
+    //asigno el rol de usuario
+    newUserRequest.role = ['admin'];
+    // garantizar un valor de correo electrónico y una contraseña válidos
     validateCredentials(_.pick(newUserRequest, ['email', 'password']));
 
-    // encrypt the password
+    // encriptar la contraseña
     const password = await this.passwordHasher.hashPassword(
       newUserRequest.password,
     );
 
     try {
-      // create the new user
+      // crear el nuevo usuario
       const savedUser = await this.userRepository.create(
         _.omit(newUserRequest, 'password'),
       );
 
-      // set the password
+      // asigno el id y la contraseña cifrada al usuario
       await this.userRepository
         .userCredentials(savedUser.id)
         .create({password});
 
       return savedUser;
     } catch (error) {
-      // MongoError 11000 duplicate key
-      if (error.code === 11000 && error.errmsg.includes('index: uniqueEmail')) {
+      // Validar si el correo electrónico ya existe
+      if (error.code === 11000 && error.errmsg.includes('E11000 duplicate key error collection')) {
         throw new HttpErrors.Conflict('Email value is already taken');
       } else {
         throw error;
@@ -149,15 +150,14 @@ export class UserController {
       },
     },
   })
-  @authenticate('jwt')
+  @authenticate('jwt') // Implementamos autenticacion y autorizacion
   @authorize({
-    allowedRoles: ['admin'],
+    allowedRoles: ['admin'], //asigno el rol de usuario que puede acceder
     voters: [basicAuthorization],
   })
   async findById(@param.path.string('userId') userId: string): Promise<User> {
     return this.userRepository.findById(userId);
   }
-
   @get('/users/me', {
     responses: {
       '200': {
@@ -170,7 +170,7 @@ export class UserController {
       },
     },
   })
-  @authenticate('jwt')
+  @authenticate('jwt')// Implementamos autenticacion y autorizacion
   async printCurrentUser(
     @inject(SecurityBindings.USER)
       currentUserProfile: UserProfile,
@@ -202,13 +202,13 @@ export class UserController {
   async login(
     @requestBody(CredentialsRequestBody) credentials: Credentials,
   ): Promise<{token: string}> {
-    // ensure the user exists, and the password is correct
+    // garantizar un valor de correo electrónico y una contraseña válidos
     const user = await this.userService.verifyCredentials(credentials);
 
-    // convert a User object into a UserProfile object (reduced set of properties)
+    // convierte un objeto User en un objeto UserProfile (conjunto reducido de propiedades)
     const userProfile = this.userService.convertToUserProfile(user);
 
-    // create a JSON Web Token based on the user profile
+    // crea un JSON Web Token basado en el perfil de usuario
     const token = await this.jwtService.generateToken(userProfile);
 
     return {token};
