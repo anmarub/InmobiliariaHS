@@ -7,3 +7,5 @@ export * from './type-product.model';
 export * from './type-property.model';
 export * from './status-order.model';
 export * from './type-identification.model';
+export * from './user-credentials.model';
+export * from './user.model';

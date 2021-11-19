@@ -18,3 +18,5 @@ export * from './type-property.controller';
 export * from './status-order.controller';
 export * from './type-identification.controller';
 export * from './business.controller';
+export * from './user-user-credentials.controller';
+export * from './user.controller';

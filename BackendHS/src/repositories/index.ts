@@ -7,3 +7,5 @@ export * from './status-order.repository';
 export * from './type-identification.repository';
 export * from './type-product.repository';
 export * from './type-property.repository';
+export * from './user-credentials.repository';
+export * from './user.repository';
