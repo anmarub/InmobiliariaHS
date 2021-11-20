@@ -6,9 +6,9 @@ import {OpenApiSpec, RestApplication} from '@loopback/rest';
 import {RestExplorerBindings, RestExplorerComponent} from '@loopback/rest-explorer';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
-import {PasswordHasherBindings, TokenServiceBindings, TokenServiceConstants, UserServiceBindings} from './config/keys';
+import {EmployeeServiceBindings, PasswordHasherBindings, TokenServiceBindings, TokenServiceConstants, UserServiceBindings} from './config/keys';
 import {MySequence} from './sequence';
-import {BcryptHasher, JWTService, MyUserService} from './services';
+import {BcryptHasher, EmployeeService, JWTService, MyUserService} from './services';
 import {JWTAuthenticationStrategy} from './strategies/jwt-strategy';
 import {SECURITY_SCHEME_SPEC, SECURITY_SPEC} from './utils/security-spec';
 //import {AuthorizationComponent} from '@loopback/authorization';
@@ -89,10 +89,11 @@ private setUpBindings(): void {
 
     this.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(JWTService);
 
-    // // Bind bcrypt hash services
+    // Vincular servicios hash de bcrypt
     this.bind(PasswordHasherBindings.ROUNDS).to(10);
     this.bind(PasswordHasherBindings.PASSWORD_HASHER).toClass(BcryptHasher);
-
+    // Vincular servicios de usuario y empleado previa creacion de los servicios
     this.bind(UserServiceBindings.USER_SERVICE).toClass(MyUserService);
+    this.bind(EmployeeServiceBindings.EMPLOYEE_SERVICE).toClass(EmployeeService);
   }
 }

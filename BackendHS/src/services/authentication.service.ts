@@ -25,52 +25,6 @@ export class AuthenticationService {
     const passwordEncript = cripto.MD5(password).toString();
     return passwordEncript;
   }
-  //metodo para validar un usuario cliente
-  async loginUserCustomer(user: string, password: string){
-    //Validacion que los campos de usuario o contraseña contengan informacin
-    if(!(user && password)){
-      throw new HttpErrors[401]('Se requiere Usuario y constraseña');
-    }
-    let valueUser;
-    let token;
-    //Validacion de Usuario y contraseña con los datos almacenados
-    try {
-      valueUser = await this.repositoryCustomer.findOne({
-        where:{
-          email: user,
-          password: password
-        },
-      });
-      token = jwt.sign({email: valueUser?.email, password: valueUser?.password}, Keys.SECUREJWT, { expiresIn: '1h' });
-      return token;
-    } catch (error) {
-
-      return new HttpErrors[401]('Usuario o contraseña invalida');
-    }
-  }
-  //metodo para validar un usuario Empleado
-  async loginUserEmployee(user: string, password: string){
-    //Validacion que los campos de usuario o contraseña contengan informacin
-    if(!(user && password)){
-      throw new HttpErrors[401]('Se requiere Usuario y constraseña');
-    }
-    let valueUser;
-    let token;
-    //Validacion de Usuario y contraseña con los datos almacenados
-    try {
-      valueUser = await this.repositoryEmployee.findOne({
-        where:{
-          email: user,
-          password: password
-        },
-      });
-      token = jwt.sign({email: valueUser?.email, password: valueUser?.password, role: valueUser?.role}, Keys.SECUREJWT, { expiresIn: '1h' });
-      return token;
-    } catch (error) {
-
-      return new HttpErrors[401]('Usuario o contraseña invalida');
-    }
-  }
 
   validationToke(token: string){
     let decriptToken;

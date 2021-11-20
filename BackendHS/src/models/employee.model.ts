@@ -1,14 +1,16 @@
-import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {belongsTo, Entity, hasOne, model, property} from '@loopback/repository';
 import {TypeIdentification} from './type-identification.model';
+import {UserCredentials} from './user-credentials.model';
 
 @model()
 export class Employee extends Entity {
   @property({
     type: 'string',
     id: true,
-    generated: true,
+    generated: false,
+    defaultFn: 'uuidv4',
   })
-  id?: string;
+  id: string;
 
   @property({
     type: 'string',
@@ -20,13 +22,13 @@ export class Employee extends Entity {
     type: 'string',
     required: true,
   })
-  names: string;
+  firtName: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  lastname: string;
+  lastName: string;
 
   @property({
     type: 'string',
@@ -41,25 +43,27 @@ export class Employee extends Entity {
   phone: string;
 
   @property({
-    type: 'string',
-    required: true,
+    type: 'array',
+    itemType: 'string',
+    nullable: false,
   })
-  password: string;
+  role: string[];
 
   @property({
     type: 'string',
     required: true,
-  })
-  role: string;
-
-  @property({
-    type: 'string',
-    required: true,
+    index: {
+      unique: true,
+    }
   })
   email: string;
 
   @belongsTo(() => TypeIdentification)
   typeIdentificationId: string;
+
+  @hasOne(() => UserCredentials, {keyTo: 'userId'})
+  employeeCredentials : string;
+
 
   constructor(data?: Partial<Employee>) {
     super(data);

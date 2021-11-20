@@ -1,6 +1,6 @@
 import {TokenService, UserService} from '@loopback/authentication';
 import {BindingKey} from '@loopback/context';
-import {User} from '../models';
+import {Employee, User} from '../models';
 import {Credentials} from '../repositories';
 import {PasswordHasher} from '../services';
 
@@ -36,5 +36,11 @@ export namespace PasswordHasherBindings {
 export namespace UserServiceBindings {
   export const USER_SERVICE = BindingKey.create<UserService<User, Credentials>>(
     'services.user.service',
+  );
+}
+//Configuro el BindingKey para el servicio de usuario Empleado
+export namespace EmployeeServiceBindings {
+  export const EMPLOYEE_SERVICE = BindingKey.create<UserService<Employee, Credentials>>(
+    'services.employee.service', //previo debe estar creado el Services de Empleado con la funciones
   );
 }
