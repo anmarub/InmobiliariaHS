@@ -1,29 +1,47 @@
-import {service} from '@loopback/core';
+import {TokenService, UserService} from '@loopback/authentication';
+import {inject, service} from '@loopback/core';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
+  model,
+  property,
   repository,
   Where
 } from '@loopback/repository';
 import {
   del, get,
-  getModelSchemaRef, param, patch, post, put, requestBody,
+  getModelSchemaRef, HttpErrors, param, patch, post, put, requestBody,
   response
 } from '@loopback/rest';
-import fetch from 'node-fetch';
-import {Keys} from '../config/keys';
+import _ from 'lodash';
+import {CustomerServiceBindings, PasswordHasherBindings, TokenServiceBindings} from '../config/keys';
 import {Customers} from '../models';
-import {CustomersRepository} from '../repositories';
+import {CredentialsCustomer, CustomersRepository} from '../repositories';
+import {PasswordHasher, validateCredentials} from '../services';
 import {AuthenticationService} from '../services/authentication.service';
-
+import {CredentialsRequestBody} from './specs/user-controller.specs';
+@model()
+export class NewCustomerRequest extends Customers {
+  @property({
+    type: 'string',
+    required: true,
+  })
+  password: string;
+}
 export class CustomerController {
   constructor(
     @repository(CustomersRepository)
     public customersRepository : CustomersRepository,
     @service(AuthenticationService)
-    public serviceAuth : AuthenticationService
+    public serviceAuth : AuthenticationService,
+    @inject(PasswordHasherBindings.PASSWORD_HASHER)
+    public passwordHasher: PasswordHasher,
+    @inject(TokenServiceBindings.TOKEN_SERVICE)
+    public jwtService: TokenService,
+    @inject(CustomerServiceBindings.CUSTOMER_SERVICE) // Inyecto el servicio de employe conf en la keys
+    public userService: UserService<Customers, CredentialsCustomer>, //injecto el services de clientes
   ) {}
 
   @post('/customers')
@@ -32,41 +50,72 @@ export class CustomerController {
     content: {'application/json': {schema: getModelSchemaRef(Customers)}},
   })
   async create(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(Customers, {
-            title: 'NewCustomers',
-            exclude: ['id'],
-          }),
-        },
-      },
-    })
-    customers: Omit<Customers, 'id'>,
-  ): Promise<Customers> {
-    // instanciar metodo para generar clave y asignar al cliente
-    const generatePassword = this.serviceAuth.generateAPassword();
-    const encriptPassword = this.serviceAuth.encriptPassword(generatePassword);
-    customers.password = encriptPassword;
-    const createdCustomer = this.customersRepository.create(customers);
-    // Enviar notificaciones
-    const mailRecipient = customers.email;
-    const emailSubject = 'Bienvenido a nuestra plataforma';
-    const emailBody = `Hola!! ${customers.names}, su nombre de usuario es ${customers.email}
-                        y su contraseña provisional es: ${encriptPassword}
-                        no olvide cambiarla en el momento de ingresa a la plataforma`;
-    // Enviar correo electronico usando node-fetch
-    const urlSend = `${Keys.URLAPINOTIFICATION}/mensaje-correo?correo_destino=${mailRecipient}&asunto=${emailSubject}&contenido_correo=${emailBody}`;
-    const fechtRepose = fetch(urlSend, {
-      method: 'GET',
-      headers: {'Content-Type': 'text/plain'},
-    });
-    console.log(fechtRepose);
-    console.log(urlSend);
-    return createdCustomer;
+    @requestBody(CredentialsRequestBody) //CredentialsRequestBody: Simplificamos el codigo de la clase
+    newCustomer: CredentialsCustomer, //usando Type en el Repository de empleado
+  ): Promise<Customers> { //usando el modelo de User
+    newCustomer.role = ['customers']; //asigno el rol de usuario
+
+    validateCredentials(_.pick(newCustomer, ['email', 'password'])); //valido los datos del usuario
+
+    const password = await this.passwordHasher.hashPassword(
+      newCustomer.password,
+    );
+
+    try {
+      // crear el nuevo usuario y omitir el password con el metodo omit de lodash
+      const savedCustomer = await this.customersRepository.create(
+        _.omit(newCustomer, 'password'),
+      );
+      // asigno el id y la contraseña cifrada al usuario a la entidad userCredentials
+      await this.customersRepository
+      .CustomerCredentials(savedCustomer.id)
+      .create({password});
+
+      return savedCustomer;
+    } catch (error) {
+      if(error.code === 11000 && error.errmsg.includes('E11000 duplicate key error collection')){
+        throw new HttpErrors.Conflict('Email already exists');
+      }else{
+        throw error;
+      }
+    }
 
   }
+  // Metodo para autenticar al usuario
+@post('/customer/login', {
+  responses: {
+    '200': {
+      description: 'Token',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              token: {
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+})
+async login(
+  @requestBody(CredentialsRequestBody) credentialsCustomer: CredentialsCustomer,
+): Promise<{token: string}> {
 
+  // garantizar un valor de correo electrónico y una contraseña válidos
+  const user = await this.userService.verifyCredentials(credentialsCustomer);
+
+  // convierte un objeto User en un objeto UserProfile (conjunto reducido de propiedades)
+  const userProfile = this.userService.convertToUserProfile(user);
+
+  // crea un JSON Web Token basado en el perfil de usuario
+  const token = await this.jwtService.generateToken(userProfile);
+
+  return {token};
+}
   @get('/customers/count')
   @response(200, {
     description: 'Customers model count',

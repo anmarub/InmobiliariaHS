@@ -24,7 +24,7 @@ import {CredentialsE, EmployeeRepository} from '../repositories';
 import {PasswordHasher} from '../services';
 import {AuthenticationService} from '../services/authentication.service';
 import {validateCredentials} from '../services/validator.service';
-import {CredentialsRequestBody} from './specs/user-controller.specs';
+import {CredentialsRequestBody, UserProfileSchema} from './specs/user-controller.specs';
 
 @model()
 export class NewEmployeeRequest extends Employee {
@@ -86,22 +86,22 @@ export class EmployeeController {
       }
     }
   }
-  @authenticate('jwt') // Implementamos autenticacion y autorizacion
+  @authenticate('jwt')// Implementamos autenticacion y autorizacion
   @authorize({
-    allowedRoles: ['Asesor'], //asigno el rol de usuario que puede acceder
-    voters: [basicAuthorization], //Middleware de autenticacion
+    allowedRoles: ['admin', 'customer'],
+    voters: [basicAuthorization],
   })
   @get('/employees/count')
   @response(200, {
     description: 'Employee model count',
-    content: {'application/json': {schema: CountSchema}},
+    content: {'application/json': {schema: UserProfileSchema}},
   })
   async count(
     @param.where(Employee) where?: Where<Employee>,
   ): Promise<Count> {
     return this.employeeRepository.count(where);
   }
-
+  @authenticate('jwt') // Implementamos autenticacion y autorizacion
   @get('/employees')
   @response(200, {
     description: 'Array of Employee model instances',
@@ -119,7 +119,7 @@ export class EmployeeController {
   ): Promise<Employee[]> {
     return this.employeeRepository.find(filter);
   }
-
+  @authenticate('jwt') // Implementamos autenticacion y autorizacion
   @patch('/employees')
   @response(200, {
     description: 'Employee PATCH success count',
@@ -138,7 +138,11 @@ export class EmployeeController {
   ): Promise<Count> {
     return this.employeeRepository.updateAll(employee, where);
   }
-
+  // JWT
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin', 'support', 'customer'],
+    voters: [basicAuthorization],
+  })
   @get('/employees/{id}')
   @response(200, {
     description: 'Employee model instance',
@@ -155,6 +159,7 @@ export class EmployeeController {
     return this.employeeRepository.findById(id, filter);
   }
 
+  @authenticate('jwt') // Implementamos autenticacion y autorizacion
   @patch('/employees/{id}')
   @response(204, {
     description: 'Employee PATCH success',
@@ -172,7 +177,7 @@ export class EmployeeController {
   ): Promise<void> {
     await this.employeeRepository.updateById(id, employee);
   }
-
+  @authenticate('jwt') // Implementamos autenticacion y autorizacion
   @put('/employees/{id}')
   @response(204, {
     description: 'Employee PUT success',
@@ -183,7 +188,7 @@ export class EmployeeController {
   ): Promise<void> {
     await this.employeeRepository.replaceById(id, employee);
   }
-
+  @authenticate('jwt') // Implementamos autenticacion y autorizacion
   @del('/employees/{id}')
   @response(204, {
     description: 'Employee DELETE success',
@@ -192,7 +197,7 @@ export class EmployeeController {
     await this.employeeRepository.deleteById(id);
   }
 
-  // Metodo para autenticar al usuario
+// Metodo para autenticar al usuario
 @post('/employee/login', {
   responses: {
     '200': {
@@ -215,13 +220,13 @@ export class EmployeeController {
 async login(
   @requestBody(CredentialsRequestBody) credentialsE: CredentialsE,
 ): Promise<{token: string}> {
-  console.log({crendeciales: credentialsE});
+
   // garantizar un valor de correo electrónico y una contraseña válidos
   const user = await this.userService.verifyCredentials(credentialsE);
-  console.log("Aqui", user);
+
   // convierte un objeto User en un objeto UserProfile (conjunto reducido de propiedades)
   const userProfile = this.userService.convertToUserProfile(user);
-  console.log({userprofile: userProfile});
+
   // crea un JSON Web Token basado en el perfil de usuario
   const token = await this.jwtService.generateToken(userProfile);
 

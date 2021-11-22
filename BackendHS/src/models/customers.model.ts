@@ -1,15 +1,17 @@
-import {belongsTo, Entity, hasMany, model, property} from '@loopback/repository';
+import {belongsTo, Entity, hasMany, hasOne, model, property} from '@loopback/repository';
 import {Order} from './order.model';
 import {TypeIdentification} from './type-identification.model';
+import {UserCredentials} from './user-credentials.model';
 
 @model()
 export class Customers extends Entity {
   @property({
     type: 'string',
     id: true,
-    generated: true,
+    generated: false,
+    defaultFn: 'uuidv4',
   })
-  id?: string;
+  id: string;
 
   @property({
     type: 'string',
@@ -21,13 +23,13 @@ export class Customers extends Entity {
     type: 'string',
     required: true,
   })
-  names: string;
+  firtName: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  lastname: string;
+  lastName: string;
 
   @property({
     type: 'string',
@@ -45,19 +47,24 @@ export class Customers extends Entity {
     type: 'string',
     required: true,
   })
-  password: string;
+  email: string;
 
   @property({
-    type: 'string',
-    required: true,
+    type: 'array',
+    itemType: 'string',
+    nullable: false,
   })
-  email: string;
+  role: string[];
+
 
   @hasMany(() => Order)
   orders: Order[];
 
   @belongsTo(() => TypeIdentification)
   typeIdentificationId: string;
+
+  @hasOne(() => UserCredentials, {keyTo: 'userId'})
+  CustomerCredentials: UserCredentials;
 
   constructor(data?: Partial<Customers>) {
     super(data);

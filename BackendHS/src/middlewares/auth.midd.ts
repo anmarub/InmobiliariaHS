@@ -39,5 +39,22 @@ export async function basicAuthorization(
     return AuthorizationDecision.DENY;
   }
 
-  return AuthorizationDecision.ALLOW;
+  // Admin and support accounts bypass id verification
+  if (
+    currentUser.roles.includes('admin') ||
+    currentUser.roles.includes('support')
+  ) {
+    return AuthorizationDecision.ALLOW;
+  }
+
+    /**
+   * Allow access only to model owners, using route as source of truth
+   *
+   * eg. @post('/users/{userId}/orders', ...) returns `userId` as args[0]
+   */
+     if (currentUser[securityId] === authorizationCtx.invocationContext.args[0]) {
+      return AuthorizationDecision.ALLOW;
+    }
+
+    return AuthorizationDecision.DENY;
 }

@@ -21,3 +21,4 @@ export * from './business.controller';
 export * from './user-user-credentials.controller';
 export * from './user.controller';
 export * from './employee-user-credentials.controller';
+export * from './customers-user-credentials.controller';

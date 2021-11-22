@@ -25,7 +25,7 @@ export class User extends Entity {
     itemType: 'string',
     nullable: false,
   })
-  role: string[];
+  role?: string[];
 
   @hasOne(() => UserCredentials)
   userCredentials: UserCredentials;
