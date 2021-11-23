@@ -9,9 +9,22 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
+import { MaterialModule } from './material-module';
+import { SharedModule } from './shared/shared.module';
+import { FullComponent } from './layouts/full/full.component';
+
+import { SpinnerComponent } from './shared/spinner.component';
+import { AppSidebarComponent } from './layouts/full/sidebar/sidebar.component';
+import { AppHeaderComponent } from './layouts/full/header/header.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+    FullComponent,
+    SpinnerComponent,
+    AppSidebarComponent,
+    AppHeaderComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -21,6 +34,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatButtonModule,
     MatIconModule,
     MatDividerModule,
+    MaterialModule,
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent],
