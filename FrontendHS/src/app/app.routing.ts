@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { FullComponent } from './layouts/full/full.component';
+import { FullComponent } from './layouts/admin/full.component';
 
 export const AppRoutes: Routes = [
   {

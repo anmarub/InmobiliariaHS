@@ -9,9 +9,9 @@ import { AppRoutes } from './app.routing';
 import { AppComponent } from './app.component';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FullComponent } from './layouts/full/full.component';
-import { AppHeaderComponent } from './layouts/full/header/header.component';
-import { AppSidebarComponent } from './layouts/full/sidebar/sidebar.component';
+import { FullComponent } from './layouts/admin/full.component';
+import { AppHeaderComponent } from './layouts/admin/header/header.component';
+import { AppSidebarComponent } from './layouts/admin/sidebar/sidebar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DemoMaterialModule } from './demo-material-module';
 
