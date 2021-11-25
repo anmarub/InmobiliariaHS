@@ -6,7 +6,7 @@ import { FullHomeComponent } from './layouts/home/full-home.component';
 export const AppRoutes: Routes = [
   {
     path: '',
-    component: FullHomeComponent,
+    component: FullComponent,
     children: [
       {
         path: '',
