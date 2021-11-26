@@ -7,7 +7,7 @@ import { Location, PopStateEvent } from '@angular/common';
 @Component({
   selector: 'app-home-navbar',
   templateUrl: './home-navbar.component.html',
-  styleUrls: ['./home-navbar.component.css']
+  styleUrls: ['./home-navbar.component.scss']
 })
 export class HomeNavbarComponent implements OnInit {
 

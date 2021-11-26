@@ -28,8 +28,8 @@ import { FullHomeComponent } from './layouts/home/full-home.component';
     AppComponent,
     FullComponent,
     AppHeaderComponent,
-    SpinnerComponent,
     AppSidebarComponent,
+    SpinnerComponent,
     HomeNavbarComponent,
     HomeFooterComponent,
     FullHomeComponent
