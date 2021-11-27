@@ -6,7 +6,7 @@ import { FullHomeComponent } from './layouts/home/full-home.component';
 export const AppRoutes: Routes = [
   {
     path: '',
-    component: FullComponent,
+    component: FullHomeComponent,
     children: [
       {
         path: '',
@@ -16,7 +16,7 @@ export const AppRoutes: Routes = [
       {
         path: '',
         loadChildren: 
-          () => import('./admin-components/admin-components.module').then(m => m.AdminComponentsModule)
+          () => import('./home-components/home-components.module').then(m => m.HomeComponentsModule)
       },
     ]
   }
