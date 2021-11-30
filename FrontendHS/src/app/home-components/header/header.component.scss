@@ -1,8 +1,14 @@
 .example-card {
-    max-width: 400px;
+    max-width: 600px;
+    width: 395px;
   }
   
   .example-header-image {
-    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-image: url('https://www.inmobiliariabogota.com/wp-content/uploads/2020/02/iconos_inmobiliariabogota_web-01-150x150.png');
     background-size: cover;
+  }
+
+  element.style{
+    flex: 1 1 auto;
+    box-sizing: border-box;
   }

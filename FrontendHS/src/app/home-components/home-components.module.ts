@@ -7,9 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './header/header.component';
 import { ProductsComponent } from './products/products.component';
 import { InformationsComponent } from './informations/informations.component';
-import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
-import { RegisterComponent } from './register/register.component';
 import { MaterialModule } from '../material-module';
 import { RouterModule } from '@angular/router';
 import { HomeRoutes } from './home-components-routing.module';
@@ -20,9 +18,7 @@ import { HomeRoutes } from './home-components-routing.module';
     HeaderComponent,
     ProductsComponent,
     InformationsComponent,
-    LoginComponent,
     ProfileComponent,
-    RegisterComponent
   ],
   imports: [
     RouterModule.forChild(HomeRoutes),
