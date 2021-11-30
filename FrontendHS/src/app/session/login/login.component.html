@@ -1,0 +1,26 @@
+<div class="login-page">
+  <mat-card class="mat-elevation-z12">
+    <mat-card-title style="text-align:center;">Inicio Session</mat-card-title>
+          <mat-card-content>
+            <form >
+              <mat-form-field>
+                <input text="text" formControlName="username" matInput placeholder="Usuario" required [matAutocomplete]="auto">
+                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"></mat-autocomplete>
+                    <mat-error></mat-error>
+                <mat-icon matSuffix>email</mat-icon>
+              </mat-form-field>
+              <mat-form-field>
+                <input formControlName="password" matInput placeholder="Contraseña" required [matAutocomplete]="auto">
+                    <button mat-icon-button matSuffix>
+                      <mat-icon></mat-icon></button>
+                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"></mat-autocomplete>
+                    <mat-error></mat-error>
+                <mat-icon matSuffix>lock</mat-icon>
+              </mat-form-field>
+              <mat-checkbox>¡Recuérdame!</mat-checkbox>
+              <button type="submit" mat-raised-button color="primary" class="login-button">Iniciar Sesión</button>
+              <button mat-raised-button class="login-button">Inicia con Google</button>
+            </form>
+          </mat-card-content>
+  </mat-card>
+</div>
