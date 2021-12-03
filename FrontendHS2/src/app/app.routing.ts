@@ -2,15 +2,16 @@ import { Routes } from '@angular/router';
 
 import { FullComponent } from './layouts/full/full.component';
 import { AdminComponentsModule } from './admin-components/admin-components.module';
+import { FullHomeComponent } from './layouts/home/full-home.component';
 
 export const AppRoutes: Routes = [
   {
-    path: '',
+    path: 'admin',
     component: FullComponent,
     children: [
       {
-        path: '',
-        redirectTo: '/',
+        path: 'admin',
+        redirectTo: '/admin',
         pathMatch: 'full'
       },
       {
@@ -23,8 +24,23 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
       },
       {
-        path: 'admin',
+        path: 'modules',
         loadChildren: () => import('./admin-components/admin-components.module').then(m => m.AdminComponentsModule)
+      }
+    ]
+  },
+  {
+    path: 'home',
+    component: FullHomeComponent,
+    children: [
+      {
+        path: 'home',
+        redirectTo: '/home',
+        pathMatch: 'full'
+      },
+      {
+        path: 'home',
+        loadChildren: () => import('./home-components/home-components.module').then(m => m.HomeComponentsModule)
       }
     ]
   }

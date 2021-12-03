@@ -1,3 +1,4 @@
+import 'hammerjs';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -10,6 +11,8 @@ import { InformationsComponent } from './informations/informations.component';
 import { ProfileComponent } from './profile/profile.component';
 import { MaterialModule } from '../material-module';
 import { RouterModule } from '@angular/router';
+import { HomeRoutes } from './home-components-routing.module';
+
 
 
 @NgModule({
@@ -21,6 +24,7 @@ import { RouterModule } from '@angular/router';
   ],
   imports: [
     CommonModule,
+    RouterModule.forChild(HomeRoutes),
     MaterialModule,
     HttpClientModule,
     FormsModule,

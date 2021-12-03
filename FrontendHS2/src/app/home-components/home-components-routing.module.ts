@@ -1,12 +1,12 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
+
 import { HeaderComponent } from './header/header.component';
 import { InformationsComponent } from './informations/informations.component';
 import { ProductsComponent } from '../admin-components/products/products.component';
 
-const routes: Routes = [
+export const HomeRoutes: Routes =[
   {
-    path: '',
+    path: 'header',
     component: HeaderComponent,
   },
   {
@@ -18,9 +18,3 @@ const routes: Routes = [
     component: ProductsComponent
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class SeguridadRoutingModule { }

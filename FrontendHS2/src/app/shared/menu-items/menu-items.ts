@@ -8,11 +8,11 @@ export interface Menu {
 }
 
 const MENUITEMS = [
-  { state: "admin/dashboard", name: "Dashboard", type: "link", icon: "av_timer" },
-  { state: "admin/customers", type: "link", name: "Buttons", icon: "crop_7_5" },
-  { state: "admin/employee", type: "link", name: "Grid List", icon: "view_comfy",},
-  { state: "admin/orders", type: "link", name: "Lists", icon: "view_list" },
-  { state: "admin/products", type: "link", name: "Menu", icon: "view_headline" }
+  { state: "modules/dashboard", name: "Dashboard", type: "link", icon: "av_timer" },
+  { state: "modules/customers", type: "link", name: "Buttons", icon: "crop_7_5" },
+  { state: "modules/employee", type: "link", name: "Grid List", icon: "view_comfy",},
+  { state: "modules/orders", type: "link", name: "Lists", icon: "view_list" },
+  { state: "modules/products", type: "link", name: "Menu", icon: "view_headline" }
 ];
 @Injectable()
 export class MenuItems {

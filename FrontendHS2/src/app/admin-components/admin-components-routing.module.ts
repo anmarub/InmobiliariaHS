@@ -6,7 +6,7 @@ import { OrdersComponent } from './orders/orders.component';
 import { ProductsComponent } from './products/products.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
-export const AdminRoutes: Routes =[
+export const AdminRoutes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent
