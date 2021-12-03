@@ -1,27 +1,30 @@
-import { Routes } from '@angular/router';
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
 
-import { FullComponent } from './layouts/admin/full.component';
-import { FullHomeComponent } from './layouts/home/full-home.component';
+import { FullComponent } from "./layouts/admin/full.component";
+import { FullHomeComponent } from "./layouts/home/full-home.component";
+import { LoginComponent } from './session/login/login.component';
 
-export const AppRoutes: Routes = [
+const routes: Routes = [
   {
-    path: '',
-    component: FullHomeComponent,
-    children: [
-      {
-        path: '',
-        redirectTo: '/',
-        pathMatch: 'full'
-      },
-      {
-        path: '',
-        loadChildren: 
-          () => import('./home-components/home-components.module').then(m => m.HomeComponentsModule)
-      },
-    ]
-  }
-  //{ path: '', redirectTo: 'home', pathMatch: 'full' },
-  //{ path: 'home', component: FullHomeComponent },
-  //{ path: 'admin', component: FullComponent },
-  
+    path: "inicio",
+    component: FullComponent,
+  },
+  {
+    path:"", //redireccionar la ruta principal
+    pathMatch: 'full',  //coincidencia exacta o completa
+    redirectTo: '/inicio' // nos redireccion a esta ruta especiica
+  },
+  {
+    path: 'seguridad',
+    loadChildren: () => import("./session/session.module").then(x => x.SessionModule)
+  },
 ];
+
+
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }

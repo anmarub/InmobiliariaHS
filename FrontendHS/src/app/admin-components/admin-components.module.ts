@@ -5,7 +5,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { CdkTableModule } from '@angular/cdk/table';
 
-import { AdminRoutes } from './admin-components-routing.module';
 import { ProductsComponent } from './products/products.component';
 import { OrdersComponent } from './orders/orders.component';
 import { CustomersComponent } from './customers/customers.component';
@@ -24,7 +23,6 @@ import { RouterModule } from '@angular/router';
     DashboardComponent
   ],
   imports: [
-    RouterModule.forChild(AdminRoutes),
     CommonModule,
     MaterialModule,
     HttpClientModule,

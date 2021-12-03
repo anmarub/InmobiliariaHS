@@ -6,7 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { LocationStrategy, PathLocationStrategy } from '@angular/common';
-import { AppRoutes } from './app.routing';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -22,6 +21,7 @@ import { SpinnerComponent } from './shared/spinner.component';
 import { HomeNavbarComponent } from './layouts/home/home-navbar/home-navbar.component';
 import { HomeFooterComponent } from './layouts/home/home-footer/home-footer.component';
 import { FullHomeComponent } from './layouts/home/full-home.component';
+import { AppRoutingModule } from './app.routing';
 
 @NgModule({
   declarations: [
@@ -45,14 +45,9 @@ import { FullHomeComponent } from './layouts/home/full-home.component';
     HttpClientModule,
     SharedModule,
     NgbModule,
-    RouterModule.forRoot(AppRoutes)
+    AppRoutingModule,
   ],
-  providers: [
-    {
-      provide: LocationStrategy,
-      useClass: PathLocationStrategy
-    }
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

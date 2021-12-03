@@ -1,0 +1,25 @@
+<div class="content">
+  <div fxLayout="row wrap">
+    <div fxFlex="25%" *ngFor="let num of [1, 2, 3, 4, 5, 6, 7]">
+      <mat-card class="mat-elevation-z4">
+        <mat-card-header>
+          <mat-card-title>Inmueble {{ num }}</mat-card-title>
+        </mat-card-header>
+        <img
+          mat-card-image
+          src="https://fotos-crm.storage.googleapis.com/FotosInmuebles/7777/412/412_9_96950434.jpg"
+        />
+        <mat-card-content>
+          <p>
+            Excelente oficina, cerca a zona financiera de la cll 72 y zona de
+            restaurantes, buenas vías de acceso, transporte publico cercano.
+          </p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button>Me Gusta</button>
+          <button mat-button>Compartir</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

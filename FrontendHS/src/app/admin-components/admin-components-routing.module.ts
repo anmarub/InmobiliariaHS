@@ -1,12 +1,13 @@
-import { Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 import { CustomersComponent } from './customers/customers.component';
 import { EmployeeComponent } from './employee/employee.component';
 import { OrdersComponent } from './orders/orders.component';
 import { ProductsComponent } from './products/products.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { NgModule } from '@angular/core';
 
-export const AdminRoutes: Routes = [
+const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent
@@ -28,3 +29,9 @@ export const AdminRoutes: Routes = [
     component: ProductsComponent
   }
 ];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class SeguridadRoutingModule { }
