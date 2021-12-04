@@ -1,17 +1,27 @@
-import {authenticate, TokenService, UserService} from '@loopback/authentication';
+import {
+  authenticate,
+  TokenService,
+  UserService,
+} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 import {inject} from '@loopback/core';
 import {model, property, repository} from '@loopback/repository';
 import {get, HttpErrors, param, post, requestBody} from '@loopback/rest';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import _ from 'lodash';
-import {PasswordHasherBindings, TokenServiceBindings, UserServiceBindings} from '../config/keys';
+import {
+  PasswordHasherBindings,
+  TokenServiceBindings,
+  UserServiceBindings,
+} from '../config/keys';
 import {basicAuthorization} from '../middlewares/auth.midd';
 import {User} from '../models';
 import {Credentials, UserRepository} from '../repositories';
 import {PasswordHasher, validateCredentials} from '../services';
-import {CredentialsRequestBody, UserProfileSchema} from './specs/user-controller.specs';
-
+import {
+  CredentialsRequestBody,
+  UserProfileSchema,
+} from './specs/user-controller.specs';
 
 @model()
 export class NewUserRequest extends User {
@@ -32,9 +42,8 @@ export class UserController {
     public jwtService: TokenService,
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: UserService<User, Credentials>,
-  ) {
-  }
-//Endpoint para registrar el usuario empleado
+  ) {}
+  //Endpoint para registrar el usuario empleado
   @post('/users/sign-up', {
     responses: {
       '200': {
@@ -51,8 +60,9 @@ export class UserController {
   })
   async create(
     @requestBody(CredentialsRequestBody)
-      newUserRequest: Credentials, //usando Type en el Repository
-  ): Promise<User> { //usando el modelo de User
+    newUserRequest: Credentials, //usando Type en el Repository
+  ): Promise<User> {
+    //usando el modelo de User
     newUserRequest.role = ['user']; //asigno el rol de usuario
 
     // garantizar un valor de correo electrónico y una contraseña válidos
@@ -77,7 +87,10 @@ export class UserController {
       return savedUser;
     } catch (error) {
       // Validar si el correo electrónico ya existe
-      if (error.code === 11000 && error.errmsg.includes('E11000 duplicate key error collection')) {
+      if (
+        error.code === 11000 &&
+        error.errmsg.includes('E11000 duplicate key error collection')
+      ) {
         throw new HttpErrors.Conflict('Email value is already taken');
       } else {
         throw error;
@@ -101,8 +114,9 @@ export class UserController {
   })
   async createAdmin(
     @requestBody(CredentialsRequestBody)
-      newUserRequest: Credentials, //usando Type en el Repository
-  ): Promise<User> { //usando el modelo de User
+    newUserRequest: Credentials, //usando Type en el Repository
+  ): Promise<User> {
+    //usando el modelo de User
     //asigno el rol de usuario
     newUserRequest.role = ['admin'];
     // garantizar un valor de correo electrónico y una contraseña válidos
@@ -127,15 +141,17 @@ export class UserController {
       return savedUser;
     } catch (error) {
       // Validar si el correo electrónico ya existe
-      if (error.code === 11000 && error.errmsg.includes('E11000 duplicate key error collection')) {
+      if (
+        error.code === 11000 &&
+        error.errmsg.includes('E11000 duplicate key error collection')
+      ) {
         throw new HttpErrors.Conflict('Email value is already taken');
       } else {
         throw error;
       }
     }
   }
-
-
+  //start obtener todos los usuarios
   @get('/users/{userId}', {
     responses: {
       '200': {
@@ -158,6 +174,8 @@ export class UserController {
   async findById(@param.path.string('userId') userId: string): Promise<User> {
     return this.userRepository.findById(userId);
   }
+  //end obtener todos los usuarios
+
   @get('/users/me', {
     responses: {
       '200': {
@@ -170,12 +188,11 @@ export class UserController {
       },
     },
   })
-  @authenticate('jwt')// Implementamos autenticacion y autorizacion
+  @authenticate('jwt') // Implementamos autenticacion y autorizacion
   async printCurrentUser(
     @inject(SecurityBindings.USER)
-      currentUserProfile: UserProfile,
+    currentUserProfile: UserProfile,
   ): Promise<User> {
-
     const userId = currentUserProfile[securityId];
     return this.userRepository.findById(userId);
   }

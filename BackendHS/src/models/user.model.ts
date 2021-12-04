@@ -16,14 +16,13 @@ export class User extends Entity {
     required: true,
     index: {
       unique: true,
-    }
+    },
   })
   email: string;
 
   @property({
     type: 'array',
     itemType: 'string',
-    nullable: false,
   })
   role?: string[];
 
@@ -39,5 +38,4 @@ export interface UserRelations {
   // describe navigational properties here
 }
 
-
-export type UserWithRelations = User & UserRelations
+export type UserWithRelations = User & UserRelations;

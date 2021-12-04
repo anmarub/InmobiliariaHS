@@ -1,26 +1,45 @@
-<div class="content">
-  <mat-card class="mat-elevation-z12">
-    <mat-card-title style="text-align:center;">Inicio Session</mat-card-title>
-          <mat-card-content>
-            <form >
-              <mat-form-field>
-                <input text="text" formControlName="username" matInput placeholder="Usuario" required [matAutocomplete]="auto">
-                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"></mat-autocomplete>
-                    <mat-error></mat-error>
-                <mat-icon matSuffix>email</mat-icon>
-              </mat-form-field>
-              <mat-form-field>
-                <input formControlName="password" matInput placeholder="Contraseña" required [matAutocomplete]="auto">
-                    <button mat-icon-button matSuffix>
-                      <mat-icon></mat-icon></button>
-                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"></mat-autocomplete>
-                    <mat-error></mat-error>
-                <mat-icon matSuffix>lock</mat-icon>
-              </mat-form-field>
-              <mat-checkbox>¡Recuérdame!</mat-checkbox>
-              <button type="submit" mat-raised-button color="primary" class="login-button">Iniciar Sesión</button>
-              <button mat-raised-button class="login-button">Inicia con Google</button>
-            </form>
-          </mat-card-content>
+<div class="main-wrapper" fxLayout="row" fxLayoutAlign="center center">
+  <mat-card class="box">
+    <mat-card-header>
+      <mat-card-title>Iniciar Sesion</mat-card-title>
+    </mat-card-header>
+
+    <form
+      [formGroup]="fbValidator"
+      (ngSubmit)="userLoginCustomer()"
+      class="example-form"
+    >
+      <mat-card-content>
+        <mat-form-field class="example-full-width">
+          <input
+            matInput
+            formControlName="email"
+            id="email"
+            type="mail"
+            placeholder="Usuario"
+          />
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width">
+          <input
+            formControlName="password"
+            id="Password"
+            type="password"
+            matInput
+            placeholder="Password"
+          />
+        </mat-form-field>
+      </mat-card-content>
+      <button
+        [disabled]="!fbValidator.valid"
+        id="sign-in"
+        type="submit"
+        mat-stroked-button
+        color="accent"
+        class="btn-block"
+      >
+        Iniciar Sesion
+      </button>
+    </form>
   </mat-card>
 </div>

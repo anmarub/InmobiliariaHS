@@ -1,4 +1,8 @@
-import {authenticate, TokenService, UserService} from '@loopback/authentication';
+import {
+  authenticate,
+  TokenService,
+  UserService,
+} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 import {inject, service} from '@loopback/core';
 import {
@@ -9,22 +13,36 @@ import {
   model,
   property,
   repository,
-  Where
+  Where,
 } from '@loopback/repository';
 import {
-  del, get,
-  getModelSchemaRef, HttpErrors, param, patch, post, put, requestBody,
-  response
+  del,
+  get,
+  getModelSchemaRef,
+  HttpErrors,
+  param,
+  patch,
+  post,
+  put,
+  requestBody,
+  response,
 } from '@loopback/rest';
 import _ from 'lodash';
-import {EmployeeServiceBindings, PasswordHasherBindings, TokenServiceBindings} from '../config/keys';
+import {
+  EmployeeServiceBindings,
+  PasswordHasherBindings,
+  TokenServiceBindings,
+} from '../config/keys';
 import {basicAuthorization} from '../middlewares/auth.midd';
 import {Employee} from '../models';
 import {CredentialsE, EmployeeRepository} from '../repositories';
 import {PasswordHasher} from '../services';
 import {AuthenticationService} from '../services/authentication.service';
 import {validateCredentials} from '../services/validator.service';
-import {CredentialsRequestBody, UserProfileSchema} from './specs/user-controller.specs';
+import {
+  CredentialsRequestBody,
+  UserProfileSchema,
+} from './specs/user-controller.specs';
 
 @model()
 export class NewEmployeeRequest extends Employee {
@@ -37,9 +55,9 @@ export class NewEmployeeRequest extends Employee {
 export class EmployeeController {
   constructor(
     @repository(EmployeeRepository)
-    public employeeRepository : EmployeeRepository,
+    public employeeRepository: EmployeeRepository,
     @service(AuthenticationService)
-    public serviceAuth : AuthenticationService,
+    public serviceAuth: AuthenticationService,
     @inject(PasswordHasherBindings.PASSWORD_HASHER)
     public passwordHasher: PasswordHasher,
     @inject(TokenServiceBindings.TOKEN_SERVICE)
@@ -48,8 +66,7 @@ export class EmployeeController {
     public userService: UserService<Employee, CredentialsE>, //injecto el services de empleado
   ) {}
 
-
-// Metodo para crear o registrar un usuario empleado
+  // Metodo para crear o registrar un usuario empleado
   @post('/employees')
   @response(200, {
     description: 'Employee model instance',
@@ -58,7 +75,8 @@ export class EmployeeController {
   async create(
     @requestBody(CredentialsRequestBody) //CredentialsRequestBody: Simplificamos el codigo de la clase
     newEmployee: CredentialsE, //usando Type en el Repository de empleado
-  ): Promise<Employee> { //usando el modelo de User
+  ): Promise<Employee> {
+    //usando el modelo de User
     newEmployee.role = ['Asesor']; //asigno el rol de usuario
 
     validateCredentials(_.pick(newEmployee, ['email', 'password'])); //valido los datos del usuario
@@ -74,21 +92,24 @@ export class EmployeeController {
       );
       // asigno el id y la contraseña cifrada al usuario a la entidad userCredentials
       await this.employeeRepository
-      .employeeCredentials(savedEmployee.id)
-      .create({password});
+        .employeeCredentials(savedEmployee.id)
+        .create({password});
 
       return savedEmployee;
     } catch (error) {
-      if(error.code === 11000 && error.errmsg.includes('E11000 duplicate key error collection')){
+      if (
+        error.code === 11000 &&
+        error.errmsg.includes('E11000 duplicate key error collection')
+      ) {
         throw new HttpErrors.Conflict('Email already exists');
-      }else{
+      } else {
         throw error;
       }
     }
   }
-  @authenticate('jwt')// Implementamos autenticacion y autorizacion
+  @authenticate('jwt') // Implementamos autenticacion y autorizacion
   @authorize({
-    allowedRoles: ['admin', 'customer'],
+    allowedRoles: ['customer'],
     voters: [basicAuthorization],
   })
   @get('/employees/count')
@@ -96,9 +117,7 @@ export class EmployeeController {
     description: 'Employee model count',
     content: {'application/json': {schema: UserProfileSchema}},
   })
-  async count(
-    @param.where(Employee) where?: Where<Employee>,
-  ): Promise<Count> {
+  async count(@param.where(Employee) where?: Where<Employee>): Promise<Count> {
     return this.employeeRepository.count(where);
   }
   @authenticate('jwt') // Implementamos autenticacion y autorizacion
@@ -140,7 +159,8 @@ export class EmployeeController {
   }
   // JWT
   @authenticate('jwt')
-  @authorize({allowedRoles: ['admin', 'support', 'customer'],
+  @authorize({
+    allowedRoles: ['admin', 'support', 'customer'],
     voters: [basicAuthorization],
   })
   @get('/employees/{id}')
@@ -154,7 +174,8 @@ export class EmployeeController {
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.filter(Employee, {exclude: 'where'}) filter?: FilterExcludingWhere<Employee>
+    @param.filter(Employee, {exclude: 'where'})
+    filter?: FilterExcludingWhere<Employee>,
   ): Promise<Employee> {
     return this.employeeRepository.findById(id, filter);
   }
@@ -197,39 +218,38 @@ export class EmployeeController {
     await this.employeeRepository.deleteById(id);
   }
 
-// Metodo para autenticar al usuario
-@post('/employee/login', {
-  responses: {
-    '200': {
-      description: 'Token',
-      content: {
-        'application/json': {
-          schema: {
-            type: 'object',
-            properties: {
-              token: {
-                type: 'string',
+  // Metodo para autenticar al usuario
+  @post('/employee/login', {
+    responses: {
+      '200': {
+        description: 'Token',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                token: {
+                  type: 'string',
+                },
               },
             },
           },
         },
       },
     },
-  },
-})
-async login(
-  @requestBody(CredentialsRequestBody) credentialsE: CredentialsE,
-): Promise<{token: string}> {
+  })
+  async login(
+    @requestBody(CredentialsRequestBody) credentialsE: CredentialsE,
+  ): Promise<{token: string}> {
+    // garantizar un valor de correo electrónico y una contraseña válidos
+    const user = await this.userService.verifyCredentials(credentialsE);
 
-  // garantizar un valor de correo electrónico y una contraseña válidos
-  const user = await this.userService.verifyCredentials(credentialsE);
+    // convierte un objeto User en un objeto UserProfile (conjunto reducido de propiedades)
+    const userProfile = this.userService.convertToUserProfile(user);
 
-  // convierte un objeto User en un objeto UserProfile (conjunto reducido de propiedades)
-  const userProfile = this.userService.convertToUserProfile(user);
+    // crea un JSON Web Token basado en el perfil de usuario
+    const token = await this.jwtService.generateToken(userProfile);
 
-  // crea un JSON Web Token basado en el perfil de usuario
-  const token = await this.jwtService.generateToken(userProfile);
-
-  return {token};
-}
+    return {token};
+  }
 }

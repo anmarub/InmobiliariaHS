@@ -9,42 +9,42 @@
       </button>
     </div>
 
-    <a mat-button class="navbar-header" href="/">
+    <a mat-button class="navbar-header" routerLink="/home/header">
       <img src="assets/images/home/text.png" class="light-logo" alt="homepage">
     </a>
         <!-- ============================================================== -->
         <!-- Componentes de menu -->
         <!-- ============================================================== -->
         <div fxShow="true" fxHide.lt-md="true">
-            <button mat-button routerLink="/">Inicio</button>
+            <button mat-button routerLink="/home/header">Inicio</button>
         </div>
         <div fxShow="true" fxHide.lt-md="true">
-            <button mat-button routerLink="/information">Nosotros</button>
+            <button mat-button routerLink="/home/information">Nosotros</button>
         </div>
         <div fxShow="true" fxHide.lt-md="true">
-            <button mat-button [matMenuTriggerFor]="menu" routerLink="/products">Nuestros Servicios</button>
+            <button mat-button [matMenuTriggerFor]="menu" routerLink="/home/products">Nuestros Servicios</button>
                 <mat-menu #menu="matMenu">
-                <button mat-menu-item routerLink="/products">Arrendamientos</button>
-                <button mat-menu-item routerLink="/products">Ventas</button>
+                <button mat-menu-item routerLink="/home/products">Arrendamientos</button>
+                <button mat-menu-item routerLink="/home/products">Ventas</button>
                 </mat-menu>        
         </div>
         <span fxFlex></span>
         <!-- ============================================================== -->
         <!-- app header component - style you can find in header.scss / header.component.ts-->
         <!-- ============================================================== -->
-        <a href="/" class=" m-r-20 hidden-sm-up" mat-raised-button color="primary" fxShow="true" fxHide.lt-md="true" routerLink="/login">Login</a>
-        <a href="/" class=" m-r-20 hidden-sm-up" mat-raised-button color="primary" fxShow="true" fxHide.lt-md="true" routerLink="/register">Registrarse</a>
+        <a href="/" class=" m-r-20 hidden-sm-up" mat-raised-button color="primary" fxShow="true" fxHide.lt-md="true" routerLink="/session/login">Login</a>
+        <a href="/" class=" m-r-20 hidden-sm-up" mat-raised-button color="primary" fxShow="true" fxHide.lt-md="true" routerLink="/session/register">Registrarse</a>
     </mat-toolbar>
     
 <mat-sidenav-container fxFlexFill class="example-container">
 
     <mat-sidenav color="primary" #sidenav fxLayout="column" mode="over"  opened="false" fxHide.gt-sm="true">
       <div fxLayout="column">
-        <a mat-button routerLink="/">Inicio</a>
-        <a mat-button routerLink="/informacion">Nosotros</a>
-        <a mat-button routerLink="/products">Nuestros Servicios</a>
-        <a mat-button routerLink="/login">Login</a>
-        <a mat-button routerLink="/register">Registrarse</a>
+        <a mat-button routerLink="/home/header">Inicio</a>
+        <a mat-button routerLink="/home/information">Nosotros</a>
+        <a mat-button routerLink="/home/products">Nuestros Servicios</a>
+        <a mat-button routerLink="/session/login">Login</a>
+        <a mat-button routerLink="/session/register">Registrarse</a>
       </div>
     </mat-sidenav>
     <mat-sidenav-content fxFlexFill>

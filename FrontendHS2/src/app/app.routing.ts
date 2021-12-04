@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { FullComponent } from './layouts/full/full.component';
 import { AdminComponentsModule } from './admin-components/admin-components.module';
 import { FullHomeComponent } from './layouts/home/full-home.component';
+import { LoginComponent } from './session/login/login.component';
 
 export const AppRoutes: Routes = [
   {
@@ -30,18 +31,22 @@ export const AppRoutes: Routes = [
     ]
   },
   {
-    path: 'home',
+    path: '',
     component: FullHomeComponent,
     children: [
       {
-        path: 'home',
-        redirectTo: '/home',
+        path: '',
+        redirectTo: '/home/header',
         pathMatch: 'full'
       },
       {
         path: 'home',
         loadChildren: () => import('./home-components/home-components.module').then(m => m.HomeComponentsModule)
+      },
+      {
+        path: 'session',
+        loadChildren: () => import('./session/session.module').then(m => m.SessionModule)
       }
     ]
-  }
+  },
 ];
