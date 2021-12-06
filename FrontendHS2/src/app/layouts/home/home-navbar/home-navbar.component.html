@@ -32,8 +32,19 @@
         <!-- ============================================================== -->
         <!-- app header component - style you can find in header.scss / header.component.ts-->
         <!-- ============================================================== -->
-        <a href="/" class=" m-r-20 hidden-sm-up" mat-raised-button color="primary" fxShow="true" fxHide.lt-md="true" routerLink="/session/login">Login</a>
-        <a href="/" class=" m-r-20 hidden-sm-up" mat-raised-button color="primary" fxShow="true" fxHide.lt-md="true" routerLink="/session/register">Registrarse</a>
+        <a *ngIf="!loginStatus" class=" m-r-20 hidden-sm-up" mat-raised-button color="primary" fxShow="true" fxHide.lt-md="true" routerLink="/session/login">Login</a>
+        <a *ngIf="!loginStatus" class=" m-r-20 hidden-sm-up" mat-raised-button color="primary" fxShow="true" fxHide.lt-md="true" routerLink="/session/register">Registrarse</a>
+        <button *ngIf="loginStatus" [matMenuTriggerFor]="profile" mat-icon-button class="m-r-5"> <img src="assets/images/users/1.jpg" alt="user" class="profile-pic"> </button>
+            <mat-menu #profile="matMenu" class="mymegamenu">
+                <button mat-menu-item>
+                  <mat-icon>settings</mat-icon> Preferencias </button>
+                <button mat-menu-item>
+                  <mat-icon>account_box</mat-icon> Perfil </button>
+                <button routerLink="/admin/modules/customers" mat-menu-item>
+                  <mat-icon>notifications_off</mat-icon> No Molestar </button>
+                <button routerLink="/session/logout" mat-menu-item>
+                <mat-icon >exit_to_app</mat-icon> Salir </button>
+            </mat-menu>
     </mat-toolbar>
     
 <mat-sidenav-container fxFlexFill class="example-container">
@@ -43,8 +54,8 @@
         <a mat-button routerLink="/home/header">Inicio</a>
         <a mat-button routerLink="/home/information">Nosotros</a>
         <a mat-button routerLink="/home/products">Nuestros Servicios</a>
-        <a mat-button routerLink="/session/login">Login</a>
-        <a mat-button routerLink="/session/register">Registrarse</a>
+        <a *ngIf="!loginStatus" mat-button routerLink="/session/login">Login</a>
+        <a *ngIf="!loginStatus"mat-button routerLink="/session/register">Registrarse</a>
       </div>
     </mat-sidenav>
     <mat-sidenav-content fxFlexFill>

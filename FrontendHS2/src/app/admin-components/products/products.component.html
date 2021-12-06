@@ -1,17 +1,76 @@
-<!-- ============================================================== -->
-<!-- Basic-->
-<!-- ============================================================== 
+<!-- Buscardor de informacion y nuevo elemento-->
 <mat-card>
-    <mat-card-content>
-        <mat-card-title></mat-card-title>
-        <mat-card-subtitle></mat-card-subtitle>
-        
-    </mat-card-content>
+  <mat-card-content>
+    <mat-card-title></mat-card-title>
+    <mat-card-subtitle></mat-card-subtitle>
+    <div fxlayout="row wrap" style="flex-flow: row wrap;box-sizing: border-box;display: flex;" class="align-items-center">
+      <div fxflex.gt-md="25" fxflex.gt-lg="25" fxflex="100" style="flex: 1 1 25%; box-sizing: border-box; max-width: 25%;">
+        <mat-form-field>
+            <input matInput type="text" placeholder="Buscar Clientes">
+        </mat-form-field>
+      </div>  
+    <div fxflex.gt-md="75" class="text-right" style="flex: 1 1 75%; box-sizing: border-box; max-width: 75%;">
+      <button mat-raised-button color="primary" matTooltip="Nuevo">
+        <mat-icon>add</mat-icon>
+        <span>Nuevo</span>
+      </button>
+    </div>
+  </div>
+  </mat-card-content>
 </mat-card>
+<!-- Tabla con todos los elementos -->
 <mat-card>
-    <mat-card-content>
-        <mat-card-title></mat-card-title>
-        <mat-card-subtitle></mat-card-subtitle>
+  <mat-card-content>
+    <mat-card-title></mat-card-title>
+    <mat-card-subtitle></mat-card-subtitle>
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource">
+        <!-- Columna de codigo -->
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef>No.</th>
+          <td mat-cell *matCellDef="let element">{{ element.code }}</td>
+        </ng-container>
 
-    </mat-card-content>
-</mat-card>-->
+        <!-- Columna de predio -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Predio</th>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        </ng-container>
+
+        <!-- Columna de costo -->
+        <ng-container matColumnDef="cost">
+          <th mat-header-cell *matHeaderCellDef>Costo</th>
+          <td mat-cell *matCellDef="let element">{{ element.cost }}</td>
+        </ng-container>
+
+        <!-- Columna de direccion-->
+        <ng-container matColumnDef="address">
+          <th mat-header-cell *matHeaderCellDef>Direccion</th>
+          <td mat-cell *matCellDef="let element">{{ element.address }}</td>
+        </ng-container>
+        <!-- Botones de Acciones -->
+         <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button matTooltip="Editar" ><!--(click)="edit(element)"-->
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Eliminar"><!--(click)="delete(element)"-->
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator
+        [pageSizeOptions]="[5, 10, 20]"
+        showFirstLastButtons
+        aria-label="Select page of periodic elements"
+      >
+      </mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>

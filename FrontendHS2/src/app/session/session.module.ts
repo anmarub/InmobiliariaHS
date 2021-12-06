@@ -10,6 +10,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { MaterialModule } from '../material-module';
 import { SessionRoutes } from './session-routing.module';
+import { LogoutComponent } from './logout/logout.component';
 
 
 
@@ -17,7 +18,8 @@ import { SessionRoutes } from './session-routing.module';
 @NgModule({
   declarations: [
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    LogoutComponent
   ],
   imports: [
     CommonModule,

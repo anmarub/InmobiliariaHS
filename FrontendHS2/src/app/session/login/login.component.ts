@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AuthService } from '../../shared/services/auth.service';
 import { MD5 } from 'crypto-js';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,9 @@ export class LoginComponent implements OnInit {
     'password' : ['', [Validators.required, Validators.minLength(6)]]
   });
 
-  constructor(private fb : FormBuilder, private auth : AuthService) { }
+  constructor(private fb : FormBuilder, 
+              private auth : AuthService,
+              private router : Router) { }
 
   ngOnInit(): void {
   }
@@ -25,10 +28,14 @@ export class LoginComponent implements OnInit {
     const password = this.fbValidator.controls['password'].value;
     const encryptPassword = MD5(password).toString();
 
-    this.auth.userLogin(email, password).subscribe((credentials: any) => {
-      alert('Login Successful');
-    }, (error: any) => {
-      alert('Login Failed');
+    this.auth.userLogin(email, password).subscribe({
+      next: (data : any) => {
+        this.auth.saveSession(data);
+        this.router.navigate(['/home/products']);
+      },
+      error: (error : any) => {
+        alert("Datos de Inicio sesion incorrectos");
+      }
     });
   }
 

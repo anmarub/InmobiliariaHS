@@ -5,13 +5,14 @@ import {Credentials} from '../repositories';
 import {PasswordHasher} from '../services';
 
 export namespace Keys {
-  export const SECUREJWT = '2uj2qdRwI6UH8@l7tXp0#qm*1BRm5s96TjOE5lpx7J!9hTi7kK';
+  export const SECUREJWT = 'P&Vj46Q4RLXbi&y3YfOypaEK5RrdyjZlP$1cgeX2bDQ0ttbbqQ';
   export const URLAPINOTIFICATION = 'http://localhost:5000';
 }
 
 export namespace TokenServiceConstants {
-  export const TOKEN_SECRET_VALUE = 'myjwts3cr3t';
-  export const TOKEN_EXPIRES_IN_VALUE = '36000';
+  export const TOKEN_SECRET_VALUE =
+    '9%T!LSLVx3P#i9hOYfh&c7hA^Qa6g!HMUBi09JAkNgSgJm!eZH';
+  export const TOKEN_EXPIRES_IN_VALUE = '3600';
 }
 
 export namespace TokenServiceBindings {
@@ -27,9 +28,8 @@ export namespace TokenServiceBindings {
 }
 
 export namespace PasswordHasherBindings {
-  export const PASSWORD_HASHER = BindingKey.create<PasswordHasher>(
-    'services.hasher',
-  );
+  export const PASSWORD_HASHER =
+    BindingKey.create<PasswordHasher>('services.hasher');
   export const ROUNDS = BindingKey.create<number>('services.hasher.round');
 }
 
@@ -40,14 +40,18 @@ export namespace UserServiceBindings {
 }
 //Configuro el BindingKey para el servicio de usuario Empleado
 export namespace EmployeeServiceBindings {
-  export const EMPLOYEE_SERVICE = BindingKey.create<UserService<Employee, Credentials>>(
+  export const EMPLOYEE_SERVICE = BindingKey.create<
+    UserService<Employee, Credentials>
+  >(
     'services.employee.service', //previo debe estar creado el Services de Empleado con la funciones
   );
 }
 
 //Configuro el BindingKey para el servicio de usuario Cliente
 export namespace CustomerServiceBindings {
-  export const CUSTOMER_SERVICE = BindingKey.create<UserService<Customers, Credentials>>(
+  export const CUSTOMER_SERVICE = BindingKey.create<
+    UserService<Customers, Credentials>
+  >(
     'services.customer.service', //previo debe estar creado el Services de Cliente con la funciones
   );
 }

@@ -14,6 +14,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { MaterialModule } from '../material-module';
 import { RouterModule } from '@angular/router';
 import { AdminRoutes } from './admin-components-routing.module';
+import { ProductCreateComponent } from './product-create/product-create.component';
+import { ProductEditComponent } from './product-edit/product-edit.component';
+import { ProductDeleteComponent } from './product-delete/product-delete.component';
 
 
 @NgModule({
@@ -22,7 +25,10 @@ import { AdminRoutes } from './admin-components-routing.module';
     OrdersComponent,
     CustomersComponent,
     EmployeeComponent,
-    DashboardComponent
+    DashboardComponent,
+    ProductCreateComponent,
+    ProductEditComponent,
+    ProductDeleteComponent
   ],
   imports: [
     CommonModule,

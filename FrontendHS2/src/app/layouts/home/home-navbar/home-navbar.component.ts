@@ -1,60 +1,31 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd, NavigationStart } from '@angular/router';
-import { Location, PopStateEvent } from '@angular/common';
-
-
+import { Component, OnInit } from "@angular/core";
+import { Router, NavigationEnd, NavigationStart } from "@angular/router";
+import { Location, PopStateEvent } from "@angular/common";
+import { Subscription } from "rxjs";
+import { AuthService } from "src/app/shared/services/auth.service";
+import { ModelIdentification } from "../../../shared/models/identification.model";
 
 @Component({
-  selector: 'app-home-navbar',
-  templateUrl: './home-navbar.component.html',
-  styleUrls: ['./home-navbar.component.scss']
+  selector: "app-home-navbar",
+  templateUrl: "./home-navbar.component.html",
+  styleUrls: ["./home-navbar.component.scss"],
 })
 export class HomeNavbarComponent implements OnInit {
+  //instancion una variable que me permitira saber si el usuario esta logueado o no
+  loginStatus: boolean = false;
 
-  public isCollapsed = true;
-  private lastPoppedUrl: any;
-  private yScrollStack: any[] = [];
+  // Instancion un metodo de Subcription para poder recibir los cambios de la variable
+  subs: Subscription = new Subscription();
+  // instancio en constructor el servicio de seguridad el cual tiene un metodo para saber si el usuario esta logueado
+  constructor(public auth: AuthService) {}
 
-  constructor(public location: Location, private router: Router) {
+  ngOnInit(): void {
+    //subscribe la respuesta obtenida y valido
+    this.subs = this.auth.GetSessionObservable().subscribe({
+      next: (data: ModelIdentification) => {
+        this.loginStatus = data.session;
+        console.log(data.session);
+      },
+    });
   }
-
-  ngOnInit() {
-    this.router.events.subscribe((event) => {
-      this.isCollapsed = true;
-      if (event instanceof NavigationStart) {
-         if (event.url != this.lastPoppedUrl)
-             this.yScrollStack.push(window.scrollY);
-     } else if (event instanceof NavigationEnd) {
-         if (event.url == this.lastPoppedUrl) {
-             this.lastPoppedUrl = undefined;
-             window.scrollTo(0, this.yScrollStack.pop());
-         } else
-             window.scrollTo(0, 0);
-     }
-   });
-   this.location.subscribe((ev:PopStateEvent) => {
-       this.lastPoppedUrl = ev.url;
-   });
-  }
-
-  isHome() {
-      var titlee = this.location.prepareExternalUrl(this.location.path());
-
-      if( titlee === '#/home' ) {
-          return true;
-      }
-      else {
-          return false;
-      }
-  }
-  isDocumentation() {
-      var titlee = this.location.prepareExternalUrl(this.location.path());
-      if( titlee === '#/documentation' ) {
-          return true;
-      }
-      else {
-          return false;
-      }
-  }
-
 }

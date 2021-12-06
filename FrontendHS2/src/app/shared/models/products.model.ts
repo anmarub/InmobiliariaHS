@@ -1,11 +1,11 @@
 export class ProductsModel {
+    id?: string;
     code?: string;
     name?: string;
     cost?: number;
     link_photo?: string;
-    id_employee?: string;
     address?: string;
-    typeProductId?: string;
-    typePropertyId?: string;
-    employeeId?: string;
+    typeProductId?: string; //multivaluados relacionados por id
+    id_employee?: string;//multivaluados relacionados por id
+    employeeId?: string;//multivaluados relacionados por id
 }

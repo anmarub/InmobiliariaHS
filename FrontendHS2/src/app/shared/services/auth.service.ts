@@ -64,20 +64,14 @@ export class AuthService {
       return "";
     }
   }
-  //Creo un metodo para eliminar la infomracion del localstorage y refrescar la informacion del modeloIdentificar
-  DeleteInfoSession() {
-    localStorage.removeItem("userHS");
-    this.refreshSession(new ModelIdentification());
+  //Creo un metodo para devolver el valor de inicio de sesion como ub observable
+  GetSessionObservable() {
+    return this.dataUserSession.asObservable();
   }
   //metodo para validar si un usuario esta logueado
   ValideSession() {
     const SessionString = localStorage.getItem("userHS");
     return SessionString;
-  }
-
-  //Creo un metodo para devolver el valor de inicio de sesion como ub observable
-  GetSessionObservable() {
-    return this.dataUserSession.asObservable();
   }
 
   //Creo un metodo para validar la informacion de session activa
@@ -86,5 +80,10 @@ export class AuthService {
     if (datoSession) {
       this.refreshSession(datoSession);
     }
+  }
+  //Creo un metodo para eliminar la infomracion del localstorage y refrescar la informacion del modeloIdentificar
+  logOut() {
+    localStorage.removeItem("userHS");
+    this.refreshSession(new ModelIdentification());
   }
 }
