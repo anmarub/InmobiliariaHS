@@ -1,1 +1,61 @@
-<p>product-create works!</p>
+<mat-card>
+  <mat-card-content>
+    <mat-card-title>Crear Inmueble</mat-card-title>
+    <mat-card-subtitle></mat-card-subtitle>
+    <div class="example-container">
+      <form [formGroup]="formValidator" (ngSubmit)="saveProduct()">
+        <div fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" >
+            <mat-form-field fxFlex color="primary" appearance="fill">
+                <input formControlName="code" matInput type="text" placeholder="Codigo Inmueble">
+            </mat-form-field>
+            <mat-form-field fxFlex color="primary" appearance="fill">
+                <input formControlName="name" matInput type="text" placeholder="Nombre Inmueble">
+            </mat-form-field>
+        </div>
+        <div fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" >
+            <mat-form-field fxFlex color="primary" appearance="fill">
+                <input formControlName="address" matInput type="text" placeholder="Direccion Inmueble">
+            </mat-form-field>
+            <mat-form-field fxFlex color="primary" appearance="fill">
+                <input formControlName="cost" matInput type="number" placeholder="Precio Inmueble">
+            </mat-form-field>
+        </div>
+        <div fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" >
+            <mat-form-field fxFlex color="primary" appearance="fill">
+                <input formControlName="link_photo" matInput type="text" placeholder="Link Inmueble">
+            </mat-form-field>
+            <mat-form-field fxFlex color="primary" appearance="fill">
+                <mat-select formControlName="employeeId" required placeholder="Asesor">
+                  <mat-option>-- Ninguno --</mat-option>
+                  <mat-option *ngFor="let employee of listEmployee" [value]="employee.id">{{employee.firtName}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+        </div>
+        <div fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px" >
+            <mat-form-field fxFlex color="primary" appearance="fill">
+                <mat-select formControlName="typePropertyId" required placeholder="Tipo Inmueble">
+                  <mat-option>-- Ninguno --</mat-option>
+                  <mat-option *ngFor="let typeService of listTypeProperty" [value]="typeService.id">{{typeService.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field fxFlex color="primary" appearance="fill">
+                <mat-select formControlName="typeProductId" required placeholder="Tipo Servicio">
+                  <mat-option>-- None --</mat-option>
+                  <mat-option *ngFor="let typeInmueble of listTypeProduct" [value]="typeInmueble.id">{{typeInmueble.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div fxLayout="row" fxFlexFill fxLayout.lt-sm="column" fxLayoutGap="16px">
+            <button mat-raised-button type="submit" color="primary" matTooltip="Guardar">
+              <mat-icon>add</mat-icon>
+              <span>Nuevo</span>
+            </button>
+            <button routerLink="/admin/modules/products"mat-raised-button type="submit" color="warn" matTooltip="Cancelar">
+                <mat-icon>cancel</mat-icon>
+                <span>Cancelar</span>
+              </button>
+        </div>
+      </form>
+    </div>
+  </mat-card-content>
+</mat-card>

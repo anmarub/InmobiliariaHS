@@ -120,7 +120,7 @@ export class EmployeeController {
   async count(@param.where(Employee) where?: Where<Employee>): Promise<Count> {
     return this.employeeRepository.count(where);
   }
-  @authenticate('jwt') // Implementamos autenticacion y autorizacion
+
   @get('/employees')
   @response(200, {
     description: 'Array of Employee model instances',

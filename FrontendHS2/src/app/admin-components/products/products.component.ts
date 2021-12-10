@@ -18,7 +18,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   //isntancio el paginador
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
-  //instancio el servicio de productoss
+  //instancio el servicio de productos
   constructor(private products : ProductsService) {
 
   }

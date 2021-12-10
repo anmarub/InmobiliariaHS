@@ -6,6 +6,6 @@ export class ProductsModel {
     link_photo?: string;
     address?: string;
     typeProductId?: string; //multivaluados relacionados por id
-    id_employee?: string;//multivaluados relacionados por id
+    typePropertyId?: string;//multivaluados relacionados por id
     employeeId?: string;//multivaluados relacionados por id
 }

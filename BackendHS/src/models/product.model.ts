@@ -1,7 +1,7 @@
 import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {Employee} from './employee.model';
 import {TypeProduct} from './type-product.model';
 import {TypeProperty} from './type-property.model';
-import {Employee} from './employee.model';
 
 @model()
 export class Product extends Entity {
@@ -35,12 +35,6 @@ export class Product extends Entity {
     required: true,
   })
   link_photo: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  id_employee: string;
 
   @property({
     type: 'string',

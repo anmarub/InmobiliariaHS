@@ -5,6 +5,9 @@ import { EmployeeComponent } from './employee/employee.component';
 import { OrdersComponent } from './orders/orders.component';
 import { ProductsComponent } from './products/products.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ProductEditComponent } from './product-edit/product-edit.component';
+import { ProductDeleteComponent } from './product-delete/product-delete.component';
+import { ProductCreateComponent } from './product-create/product-create.component';
 
 export const AdminRoutes: Routes = [
   {
@@ -26,5 +29,17 @@ export const AdminRoutes: Routes = [
   {
     path: 'products',
     component: ProductsComponent
+  },
+  {
+    path: 'product-edit/:id',
+    component: ProductEditComponent
+  },
+  {
+    path: 'product-delete/:id',
+    component: ProductDeleteComponent
+  },
+  {
+    path: 'product-new',
+    component: ProductCreateComponent
   }
 ];
